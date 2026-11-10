@@ -1,0 +1,90 @@
+ {% load static %}
+  <!DOCTYPE html>
+  <html>
+  <head>
+      <title>VR BlackBoard</title>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Include jQuery library -->
+      <style>
+    body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+    }
+    #video {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        width: 300px; /* Adjust the width as needed */
+        height: 225px; /* Adjust the height as needed */
+        border: 2px solid #333;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        transform: scaleX(-1); /* Flip the video horizontally */
+        display: none; /* Hide the video element by default */
+    }
+    #toggleButton {
+        margin-top: 20px;
+    }
+      </style>
+      <link rel="stylesheet" href="{% static 'style.css' %}">
+  </head>
+  <body>
+  
+  <!-- Navbar (sit on top) -->
+  <div class="w3-top">
+      <div class="w3-bar w3-white w3-wide w3-padding w3-card">
+          <a href="{% url 'home' %}" class="w3-bar-item w3-button"><b>VR</b> BlackBoard</a>
+          <!-- Float links to the right. Hide them on small screens -->
+          <div class="w3-right w3-hide-small">
+            <a href="{% url 'contact' %}" class="w3-bar-item w3-button">Contact</a>
+            <a href="{% url 'collection' %}" class="w3-bar-item w3-button">Collection</a>
+            <a href="{% url 'profile' %}" class="w3-bar-item w3-button">My Profile</a>
+          </div>
+      </div>
+  </div>
+  <!-- Page content -->
+  <div class="w3-content w3-padding" style="max-width: 1564px">
+      <h1>Live Drawing</h1>
+      <!-- Your drawing code here -->
+  
+      <h1>Python Code Execution</h1>
+  
+      <button id="run-code">Run Code</button>
+  
+      <div id="output">
+          <!-- Output will be displayed here -->
+      </div>
+  
+      <script>
+          $(document).ready(function () {
+              $('#run-code').click(function () {
+                  var csrfToken = '{{ csrf_token }}';
+                  var url = '{{ runcode }}'; // Define the URL correctly
+  
+                  $.ajax({
+                      type: 'POST',
+                      url: url,
+                      headers: { 'X-CSRFToken': csrfToken },
+                      success: function (response) {
+                          $('#output').text(response.output);
+                      }
+                  });
+              });
+          });
+      </script>
+  
+      <!-- Logout button -->
+      <button class="w3-button w3-black w3-section" type="submit">
+          <a href="{% url 'logout' %}" class="btn btn-primary">Logout</a>
+      </button>
+  </div>
+  
+  <script src="{% static 'drawing.js' %}"></script>
+  </body>
+  </html>
+  
